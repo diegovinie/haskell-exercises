@@ -153,3 +153,41 @@ filter' fn (x:xs)
 largestDivisible :: (Integral a) => a -> a
 largestDivisible div = head (filter fn [100000, 99999..])
   where fn x = x `mod` div == 0
+
+takeWhile' :: (a -> Bool) -> [a] -> [a]
+takeWhile' fn [] = []
+takeWhile' fn (x:xs)
+  | fn x == False = []
+  | otherwise = x : takeWhile' fn xs
+
+chain :: (Integral a) => a -> [a]
+chain 1 = [1]
+chain x
+  | even x  = x : chain (x `div` 2)
+  | odd x   = x : chain (x * 3 + 1)
+
+numLongChain :: Int
+numLongChain = length (filter (\x -> length x > 15) (map chain [1..100]))
+
+numLongChain' :: Int
+numLongChain' = length (filter isLong (map chain [1..100]))
+  where isLong xs = length xs > 15
+
+numLongChain'' :: (Integral a) => Int -> [a] -> Int
+numLongChain'' lim xs = length (filter isLong (map chain xs))
+  where isLong x = length x > lim
+
+flip''' :: (a -> b -> c) -> b -> a -> c
+flip''' f = \x y -> f y x
+
+sum' :: (Num a) => [a] -> a
+sum' xs = foldl (\acc x -> acc + x) 0 xs
+
+sum'' :: (Num a) => [a] -> a
+sum'' = foldl (+) 0
+
+elem'' :: (Eq a) => a -> [a] -> Bool
+elem'' y = foldl (\acc x -> if x == y then True else acc) False
+
+map'' :: (a -> b) -> [a] -> [b]
+map'' fn = foldr (\x acc -> fn x : acc) []
