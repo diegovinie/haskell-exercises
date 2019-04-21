@@ -8,6 +8,7 @@ addVectors a b = (fst a + fst b, snd a + snd b)
 addVectors' :: (Num a) => (a, a) -> (a, a) -> (a, a)
 addVectors' (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
 
+-- @ separa patrones
 tell :: (Show a) => [a] -> String
 tell [] = "Es una lista vacía"
 tell (x:[]) = "Un solo elemento: " ++ show x
@@ -166,6 +167,7 @@ chain x
   | even x  = x : chain (x `div` 2)
   | odd x   = x : chain (x * 3 + 1)
 
+-- lambda vs. declarativo
 numLongChain :: Int
 numLongChain = length (filter (\x -> length x > 15) (map chain [1..100]))
 
@@ -177,8 +179,12 @@ numLongChain'' :: (Integral a) => Int -> [a] -> Int
 numLongChain'' lim xs = length (filter isLong (map chain xs))
   where isLong x = length x > lim
 
+-- lambdas
+
 flip''' :: (a -> b -> c) -> b -> a -> c
 flip''' f = \x y -> f y x
+
+-- pliegues
 
 sum' :: (Num a) => [a] -> a
 sum' xs = foldl (\acc x -> acc + x) 0 xs
@@ -191,3 +197,35 @@ elem'' y = foldl (\acc x -> if x == y then True else acc) False
 
 map'' :: (a -> b) -> [a] -> [b]
 map'' fn = foldr (\x acc -> fn x : acc) []
+
+maximum''' :: (Ord a) => [a] -> a
+maximum''' = foldl1 (\acc x -> if x > acc then x else acc)
+
+reverse'' :: (Ord a) => [a] -> [a]
+reverse'' = foldl (\acc x -> x:acc) []
+
+head' :: [a] -> a
+head' = foldl1 (\acc x -> x)
+
+
+-- ejemplos de composición de funciones
+
+sqrtSums = length (takeWhile (<1000) (scanl1 (+) (map sqrt [1..]))) + 1
+
+sqrtSums' = length (takeWhile (<1000) $ scanl1 (+) $ map sqrt [1..]) + 1
+
+fnComp = replicate 100 (product (map (*3) (zipWith max [1..5] [4..8])))
+fnComp' = replicate 100 $ product $ map (*3) $ zipWith max [1..5] [4..8]
+fnComp'' = replicate 100 .product . map (*3) . zipWith max [1..5] $ [4..8]
+
+oddSquareSum :: Integer
+oddSquareSum = sum (takeWhile (<10000) (filter odd (map (^2) [1..])))
+
+oddSquareSum' :: Integer
+oddSquareSum' = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]
+
+oddSquareSum'' :: Integer
+oddSquareSum'' =
+  let squaredOdds = filter odd $ map (^2) [1..]
+      belowLimit = takeWhile (<10000) squaredOdds
+  in  sum belowLimit
