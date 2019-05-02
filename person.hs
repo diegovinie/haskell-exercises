@@ -14,3 +14,21 @@ guy = Person {
   phoneNumber = "44433-44",
   flavor = "sugar"
 }
+
+data Car = Car {
+                  company :: String
+                , model :: String
+                , year :: Int
+} deriving (Show)
+
+-- data Car a b c = Car {  company :: a
+--                       , model :: b
+--                       , year :: c } deriving (Show)
+
+-- tellCar :: Car -> String
+-- tellCar (Car {company = c, model = m, year = y }) = "This " ++ c ++ " " ++ m ++ " was made in " ++ Show y
+
+data Vector a = Vector a a a deriving (Show)
+
+vPlus :: (Num t) => Vector t -> Vector t -> Vector t
+(Vector i j k) `vPlus` (Vector x y z) = Vector (i+x) (j+y) (k+z)
